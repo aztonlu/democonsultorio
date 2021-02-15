@@ -705,6 +705,7 @@ class BusquedaController extends Controller
       $img = $request->file('imgC');
       $texto = $request->texto64;
       $imagen = $request->image;
+      $dni = Paciente::where('dni',$request->dni)->get();
 
       $random = str_random(5);
       $nombre = 'examenes/'.$random.'.png';
@@ -732,6 +733,7 @@ class BusquedaController extends Controller
           $detalle->dni = $request->dni;
           $detalle->save();
       }
+      
 
       //guardar costos aqui
       $deuda = $request->deuda;
@@ -746,8 +748,17 @@ class BusquedaController extends Controller
       $detalle->fecha = $request->fechaCuenta;
       //$detalle->dni = $request->dni;
       $detalle->save();
+
+      $odontograma = Odontograma::where('dni',$request->dni)->orderBy('idOdontograma','DESC')->value('imagen');
+      $id = Odontograma::where('dni',$request->dni)->orderBy('idOdontograma','DESC')->value('idOdontograma');
+      $conceptos = DetalleOdontograma::where('idOdontograma',$id)->get();
+      $cuentas = Cuenta::where('idOdontograma',$id)->get();
+      $deuda = Cuenta::where('idOdontograma',$id)->orderBy('id','DESC')->value('deuda');
       
-      return Redirect::action('BusquedaController@odontograma');
+      $dni = Paciente::where('dni',$request->dni)->get();
+      return view('html5')->with('pacientes',$dni)->with('odontogramas',$odontograma)->with('conceptos',$conceptos)->with('idOdontograma',$id)->with('cuentas',$cuentas)->with('deuda',$deuda);
+      
+
     }
     public function insertarOdontograma(Request $request)
     {

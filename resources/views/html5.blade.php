@@ -333,6 +333,7 @@ $("#penGreen").click(function(){ mode="penGreen"; });
 $("#eraser").click(function(){ mode="eraser"; });
 
 </script>
+
 <script>
   function canvasToImg() {
       var canvas1 = document.getElementById("canvas");        
